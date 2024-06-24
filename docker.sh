@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Instalacja Docker Engine
 sudo apt-get update -y
 sudo apt-get install -y \
     apt-transport-https \
@@ -25,3 +24,17 @@ sudo chmod +x /usr/local/bin/docker-compose
 # Instalacja Ansible
 sudo apt-get update -y
 sudo apt-get install -y ansible
+
+sudo docker run -d \
+    --name pihole \
+    -p 53:53/tcp -p 53:53/udp \
+    -p 9090:80 \
+    -e TZ=„Poland/Warsaw” \
+    -v "$(pwd)/etc-pihole/:/etc/pihole/" \
+    -v "$(pwd)/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
+    --dns=127.0.0.1 --dns=1.1.1.1 \
+    --restart=unless-stopped \
+    pihole/pihole:latest
+
+sudo apt-get update -y
+sudo apt-get install -y
